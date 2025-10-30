@@ -1,10 +1,13 @@
 <script setup>
+    
 </script>
 
+
 <template>
- <RouterView />
+  MyImages
 </template>
 
-<style scoped>
+
+<style  scoped>
 
 </style>

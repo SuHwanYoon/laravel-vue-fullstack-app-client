@@ -95,8 +95,10 @@ import GuestLayout from "../components/GuestLayout.vue";
       <p class="mt-10 text-center text-sm/6 text-gray-500">
         Already have an account?
         {{ " " }}
+        <!-- RouterLink는 클릭하면 지정된 경로로 이동합니다.
+        `:to` 속성은 이동할 경로를 지정하며, 객체 형태로 `name` 속성을 사용하여 라우트 이름을 지정할 수 있습니다.-->
         <RouterLink
-          :to="{ name: Login }"
+          :to="{ name: 'Login' }"
           class="font-semibold text-indigo-600 hover:text-indigo-500"
           >Login from here
         </RouterLink>

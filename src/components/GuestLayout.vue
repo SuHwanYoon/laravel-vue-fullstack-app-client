@@ -12,7 +12,7 @@
         alt="Your Company"
       />
     </div>
-
+    <!-- slot의 역할은  -->
     <slot></slot>
   </div>
 </template>

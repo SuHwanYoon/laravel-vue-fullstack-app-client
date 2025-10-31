@@ -14,7 +14,7 @@ import NotFound from "./components/NotFound.vue";
 // `routes` 배열은 애플리케이션의 모든 라우트(경로) 정보를 담고 있습니다.
 const routes = [
   // DefaultLayout을 사용하는 라우트들입니다. (예: 로그인이 필요한 페이지)
-  // 이 라우트들은 DefaultLayout 컴포넌트 내의 <router-view>에 렌더링됩니다.
+  // 이 라우트들은 DefaultLayout 컴포넌트 내의 <RouterView/>에 렌더링됩니다.
   {
     path: "/",
     component: DefaultLayout,

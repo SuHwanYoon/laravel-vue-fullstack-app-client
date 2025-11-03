@@ -148,19 +148,8 @@
       </DisclosurePanel>
     </Disclosure>
 
-    <header class="relative bg-white shadow">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
-          Dashboard
-        </h1>
-      </div>
-    </header>
-    <main>
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <!-- 여기에 URL path에 따른 component가 표시됨 -->
-        <RouterView />
-      </div>
-    </main>
+    <!-- 여기에 URL path에 따른 component가 표시됨 -->
+    <RouterView />
   </div>
 </template>
 
@@ -177,10 +166,10 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
+  name: "YOON SUHWAN",
+  email: "yoon@example.com",
   imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
 };
 const navigation = [
   { name: "Upload", to: { name: "Home" } },

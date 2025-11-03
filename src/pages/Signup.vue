@@ -1,5 +1,23 @@
 <script setup>
+import { ref } from "vue";
 import GuestLayout from "../components/GuestLayout.vue";
+import axiosClient from "@/axios.js";
+
+// data는 회원가입 폼의 입력 필드 값을 저장하는 반응형 객체입니다.
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+const data = ref({
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+});
+
+function submit() {
+  axiosClient.get("/sanctum/csrf-cookie").then((response) => {
+    axiosClient.post("/register", data.value);
+  });
+}
 </script>
 
 <template>
@@ -11,7 +29,7 @@ import GuestLayout from "../components/GuestLayout.vue";
     </h2>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-4" action="#" method="POST">
+      <form @submit.prevent="submit" class="space-y-4">
         <!-- 이름 입력필드 -->
         <div>
           <label for="name" class="block text-sm/6 font-medium text-gray-900"
@@ -22,6 +40,7 @@ import GuestLayout from "../components/GuestLayout.vue";
               name="name"
               id="name"
               required
+              v-model="data.name"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -38,6 +57,7 @@ import GuestLayout from "../components/GuestLayout.vue";
               id="email"
               autocomplete="email"
               required
+              v-model="data.email"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -57,6 +77,7 @@ import GuestLayout from "../components/GuestLayout.vue";
               name="password"
               id="password"
               required
+              v-model="data.password"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -77,6 +98,7 @@ import GuestLayout from "../components/GuestLayout.vue";
               name="password"
               id="passwordConfirmation"
               required
+              v-model="data.password_confirmation"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -99,7 +121,8 @@ import GuestLayout from "../components/GuestLayout.vue";
         `:to` 속성은 이동할 경로를 지정하며, 객체 형태로 `name` 속성을 사용하여 라우트 이름을 지정할 수 있습니다.-->
         <RouterLink
           :to="{ name: 'Login' }"
-          class="font-semibold text-indigo-600 hover:text-indigo-500">
+          class="font-semibold text-indigo-600 hover:text-indigo-500"
+        >
           Login from here
         </RouterLink>
       </p>

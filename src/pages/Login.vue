@@ -1,5 +1,28 @@
+<!-- eslint-disable no-unused-vars -->
 <script setup>
+import axiosClient from "@/axios.js";
+import router from "@/router";
+import { ref } from "vue";
 import GuestLayout from "../components/GuestLayout.vue";
+
+// data는 로그인 폼의 입력 필드 값을 저장하는 반응형 객체입니다.
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+const data = ref({
+  email: "",
+  password: "",
+});
+
+// Login form의 /login에 PostRequest할 submit함수
+function submit() {
+  // eslint-disable-next-line no-unused-vars
+  axiosClient.get("/sanctum/csrf-cookie").then((response) => {
+    // axiosInstance의 .then은 Promise를 반환
+    axiosClient.post("/login", data.value).then((response) => {
+      router.push({ name: "Home" });
+    });
+  });
+}
 </script>
 
 <template>
@@ -11,16 +34,20 @@ import GuestLayout from "../components/GuestLayout.vue";
     </h2>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <!-- @는 vue에서 v-on의 축약형 @submit는 form의 submit동작을감지하고 가로챔-->
+      <!-- v-on은 vue의 디렉티브이고 vue에서 html태그에 기능을 추가하기위한 문법 -->
+      <!-- submit가 되지만 페이지의 새로고침은 막기위해서 prevent처리 -->
+      <form class="space-y-6" @submit.prevent="submit">
         <div>
           <label for="email" class="block text-sm/6 font-medium text-gray-900"
             >Email address</label
           >
           <div class="mt-2">
             <input
+              id="email"
+              v-model="data.email"
               type="email"
               name="email"
-              id="email"
               autocomplete="email"
               required
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -35,13 +62,13 @@ import GuestLayout from "../components/GuestLayout.vue";
               class="block text-sm/6 font-medium text-gray-900"
               >Password</label
             >
-
           </div>
           <div class="mt-2">
             <input
+              id="password"
+              v-model="data.password"
               type="password"
               name="password"
-              id="password"
               autocomplete="current-password"
               required
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -64,7 +91,8 @@ import GuestLayout from "../components/GuestLayout.vue";
         {{ " " }}
         <RouterLink
           :to="{ name: 'Signup' }"
-          class="font-semibold text-indigo-600 hover:text-indigo-500">
+          class="font-semibold text-indigo-600 hover:text-indigo-500"
+        >
           Create an Account
         </RouterLink>
       </p>

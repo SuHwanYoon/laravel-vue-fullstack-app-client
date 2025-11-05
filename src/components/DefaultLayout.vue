@@ -157,8 +157,9 @@
 </template>
 
 <script setup>
-import axiosClient from "@/axios";
+// import axiosClient from "@/axios";
 import router from "@/router";
+import useUserStore from "@/store/user";
 import {
   Disclosure,
   DisclosureButton,
@@ -170,13 +171,21 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { computed } from "vue";
 
-const user = {
-  name: "YOON SUHWAN",
-  email: "yoon@example.com",
-  imageUrl:
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-};
+const userStore = useUserStore();
+
+const user = computed(() => {
+  return userStore.user;
+});
+
+
+// const user = {
+//   name: "YOON SUHWAN",
+//   email: "yoon@example.com",
+//   imageUrl:
+//     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+// };
 const navigation = [
   { name: "Upload", to: { name: "Home" } },
   { name: "My Images", to: { name: "MyImages" } },
@@ -190,9 +199,7 @@ const navigation = [
 
 // 로그아웃 버튼클릭 콘솔 프린트 확인용 함수
 function logout() {
-  console.log("Logout !!!!!!");
-  axiosClient.post("/logout")
-  .then(() => {
+  userStore.logoutUser().then(() => {
     router.push({ name: "Login" });
   });
 }

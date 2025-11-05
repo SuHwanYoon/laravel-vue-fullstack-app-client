@@ -18,11 +18,14 @@ const useUserStore = defineStore('user', {
   // 액션 내에서는 `this`를 통해 스토어의 다른 상태나 액션에 접근할 수 있습니다.
   actions: {
 
-    fetchUser() {
-      return axiosClient.get('/api/user')
+    async fetchUser() {
+      
+      const response = await axiosClient.get('/api/user')
       .then((response) => {
         this.user = response.data;
       })
+
+      return response;
     },
 
     /**

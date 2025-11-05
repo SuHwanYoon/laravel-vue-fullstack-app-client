@@ -1,3 +1,5 @@
+<!-- eslint-disable no-unused-vars -->
+<!-- eslint-disable no-unused-vars -->
 <template>
   <!--
     This example requires updating your template:
@@ -8,7 +10,7 @@
     ```
   -->
   <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+    <Disclosure v-slot="{ open }" as="nav" class="bg-gray-800">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
           <div class="flex items-center">
@@ -76,8 +78,9 @@
                   >
                   <!-- 로그아웃 버튼메뉴 -->
                     <MenuItem>
-                      <button @click="logout"
-                        :class="['block px-4 py-2 text-sm text-gray-700',]">
+                      <button
+:class="['block px-4 py-2 text-sm text-gray-700',]"
+                        @click="logout">
                          Sign Out
                       </button>
                     </MenuItem>
@@ -139,8 +142,8 @@
           </div>
           <div class="mt-3 space-y-1 px-2">
             <DisclosureButton
-              @click="logout"
-              class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">
+              class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white"
+              @click="logout">
                 Sign Out
             </DisclosureButton>
           </div>
@@ -154,9 +157,13 @@
 </template>
 
 <script setup>
+// import axiosClient from "@/axios";
+import router from "@/router";
+import useUserStore from "@/store/user";
 import {
   Disclosure,
   DisclosureButton,
+
   DisclosurePanel,
   Menu,
   MenuButton,
@@ -164,13 +171,21 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { computed } from "vue";
 
-const user = {
-  name: "YOON SUHWAN",
-  email: "yoon@example.com",
-  imageUrl:
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-};
+const userStore = useUserStore();
+
+const user = computed(() => {
+  return userStore.user;
+});
+
+
+// const user = {
+//   name: "YOON SUHWAN",
+//   email: "yoon@example.com",
+//   imageUrl:
+//     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+// };
 const navigation = [
   { name: "Upload", to: { name: "Home" } },
   { name: "My Images", to: { name: "MyImages" } },
@@ -184,7 +199,9 @@ const navigation = [
 
 // 로그아웃 버튼클릭 콘솔 프린트 확인용 함수
 function logout() {
-  console.log("Logout !!!!!!");
+  userStore.logoutUser().then(() => {
+    router.push({ name: "Login" });
+  });
 }
 </script>
 

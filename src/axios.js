@@ -28,13 +28,20 @@ const axiosClient = axios.create({
 // 응답 인터셉터를 설정합니다.
 // 모든 응답에 대해 공통적으로 처리할 로직을 정의합니다.
 // 예를 들어, 401 Unauthorized 에러가 발생하면 로그인 페이지로 리다이렉트할 수 있습니다.
-
 axiosClient.interceptors.response.use(
   (response) => {
+    // 요청이 성공적으로 완료되면(2xx 상태 코드) 응답을 그대로 반환합니다.
+    // response: 서버로부터 받은 응답 객체입니다.
     return response;
   },
   (error) => {
+    // 요청 처리 중 에러가 발생했을 때(2xx 외의 상태 코드) 이 부분이 실행됩니다.
+    // error: 에러 객체입니다.
+
+    // 에러 응답이 존재하고(error.response), 해당 응답의 HTTP 상태 코드가 401 (Unauthorized)인 경우
     if (error.response && error.response.status === 401) {
+      // 사용자 인증이 필요하거나 실패했음을 의미하므로,
+      // Vue Router를 사용하여 'Login'이라는 이름의 라우트로 페이지를 이동시킵니다.
       router.push({ name: "Login" });
     } 
     throw error;

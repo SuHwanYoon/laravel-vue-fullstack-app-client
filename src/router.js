@@ -10,6 +10,7 @@ import MyImages from "./pages/MyImages.vue";
 import Login from "./pages/Login.vue";
 import Signup from "./pages/Signup.vue";
 import NotFound from "./components/NotFound.vue";
+import useUserStore from "./store/user";
 
 // `routes` 배열은 애플리케이션의 모든 라우트(경로) 정보를 담고 있습니다.
 const routes = [
@@ -24,6 +25,30 @@ const routes = [
       // path: "/images"는 사용자의 이미지 목록을 보여주는 페이지입니다.
       { path: "/images", name: "MyImages", component: MyImages },
     ],
+    // `beforeEnter`는 특정 라우트에 진입하기 전에 실행되는 가드(Guard)입니다.
+    // 이 함수는 라우트 진입을 허용하거나, 다른 라우트로 리다이렉트하거나, 진입을 취소할 수 있습니다.
+    // `to`: 이동하려는 대상 라우트 객체입니다. (어디로 갈 것인가)
+    // `from`: 현재 위치하고 있는 라우트 객체입니다. (어디에서 왔는가)
+    // `next`: 라우트 이동을 제어하는 함수입니다.
+    //         - `next()`: 다음 훅으로 이동하거나 라우트 진입을 허용합니다.
+    //         - `next(false)`: 현재 라우트 진입을 취소합니다.
+    //         - `next('/login')` 또는 `next({ name: 'Login' })`: 지정된 라우트로 리다이렉트합니다.
+    beforeEnter: async (to, from, next) => {
+      try {
+        // Pinia 스토어에서 `useUserStore`를 사용하여 사용자 스토어 인스턴스를 가져옵니다.
+        const userStore = useUserStore();
+        
+        // 사용자 정보를 비동기적으로 가져옵니다.
+        // 이 함수는 API 요청을 보내 사용자 데이터를 스토어에 저장합니다.
+        await userStore.fetchUser();
+        // 사용자 정보를 성공적으로 가져왔으므로, 라우트 진입을 허용합니다.
+        next();
+       
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        next(false);
+      }
+    }
   },
   // 아래는 DefaultLayout을 사용하지 않는 독립적인 페이지들입니다.
   {

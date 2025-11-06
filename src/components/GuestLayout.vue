@@ -12,7 +12,7 @@
         alt="Your Company"
       />
     </div>
-    <!-- slot의 역할은  -->
+    <!-- slot 자리에 부모 컴포넌트 GuestLayout 감싼 자식 컴포넌트가 랜더링됨 -->
     <slot></slot>
   </div>
 </template>

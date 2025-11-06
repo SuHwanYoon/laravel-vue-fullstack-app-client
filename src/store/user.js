@@ -17,15 +17,27 @@ const useUserStore = defineStore('user', {
   // `actions`는 스토어의 상태를 변경하거나 비동기 작업을 수행하는 메서드들을 정의하는 객체입니다.
   // 액션 내에서는 `this`를 통해 스토어의 다른 상태나 액션에 접근할 수 있습니다.
   actions: {
-
+    // fetchUser함수는 boforeEnter guard에서 결과를 기다리는 함수임
+    // 또한 boforeEnter에서는 return된 Promise를 사용해야하는상태임
+    // 만약 return을 명시안하면 undified를 반화하게 되어 호출쪽에서는 await undified를 사용하게 된다
     async fetchUser() {
-      
-      const response = await axiosClient.get('/api/user')
-      .then((response) => {
+      // try catch return 형태로 작성
+      try {
+        const response = await axiosClient.get('/api/user');
         this.user = response.data;
-      })
+        console.log(response.data);
+        return response;
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        throw error;
+      }
+      
+      // const response = await axiosClient.get('/api/user')
+      // .then((response) => {
+      //   this.user = response.data;
+      // })
 
-      return response;
+      // return response;
     },
 
     /**
@@ -35,6 +47,8 @@ const useUserStore = defineStore('user', {
      */
     async logoutUser() {
       try {
+        // 이 함수는 Promise return값을 호출하는 쪽에서 사용하지않음
+        // 따라서 return 필요없음
         await axiosClient.post('/logout');
         console.log('User logged out successfully.');
       } finally {

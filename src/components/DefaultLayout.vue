@@ -197,7 +197,8 @@ const navigation = [
 //   { name: "Sign out", href: "#" },
 // ];
 
-// 로그아웃 버튼클릭 콘솔 프린트 확인용 함수
+// 로그아웃 버튼클릭시 상태관리 userStore에서 함수호출
+// 실행하고 Login 페이지로 이동
 function logout() {
   userStore.logoutUser().then(() => {
     router.push({ name: "Login" });

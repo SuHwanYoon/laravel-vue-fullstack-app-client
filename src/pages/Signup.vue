@@ -14,10 +14,20 @@ const data = ref({
   password_confirmation: "",
 });
 
-function submit() {
-  axiosClient.get("/sanctum/csrf-cookie").then((response) => {
-    axiosClient.post("/register", data.value);
-  });
+// ref를 이용한 문자열 errorMessage
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+const errorMessage = ref("");
+
+// 회원가입 form의 /register에 PostRequest할 submit함수
+async function submit() {
+  try {
+    await axiosClient.get("/sanctum/csrf-cookie");
+    await axiosClient.post("/register", data.value);
+  } catch (error) {
+    console.log(error);
+    errorMessage.value = error.response.data.message;
+  }
 }
 </script>
 
@@ -29,8 +39,16 @@ function submit() {
       Create New Account
     </h2>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form @submit.prevent="submit" class="space-y-4">
+    <!-- Sign up form 위쪽에 에러메세지 출력-->
+    <!-- div 블록에 v-if 디렉티브를 사용 -->
+    <div
+      v-if="errorMessage"
+      class="mt-4 py-2 px-3 rounded text-white bg-red-400 sm:mx-auto sm:w-full sm:max-w-sm" >
+      {{ errorMessage }}
+    </div>
+
+    <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form class="space-y-4" @submit.prevent="submit">
         <!-- 이름 입력필드 -->
         <div>
           <label for="name" class="block text-sm/6 font-medium text-gray-900"
@@ -38,10 +56,10 @@ function submit() {
           >
           <div class="mt-2">
             <input
-              name="name"
               id="name"
-              required
               v-model="data.name"
+              name="name"
+              required
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -53,12 +71,12 @@ function submit() {
           >
           <div class="mt-2">
             <input
+              id="email"
+              v-model="data.email"
               type="email"
               name="email"
-              id="email"
               autocomplete="email"
               required
-              v-model="data.email"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -74,11 +92,11 @@ function submit() {
           </div>
           <div class="mt-2">
             <input
+              id="password"
+              v-model="data.password"
               type="password"
               name="password"
-              id="password"
               required
-              v-model="data.password"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
@@ -95,11 +113,11 @@ function submit() {
           </div>
           <div class="mt-2">
             <input
+              id="passwordConfirmation"
+              v-model="data.password_confirmation"
               type="password"
               name="password"
-              id="passwordConfirmation"
               required
-              v-model="data.password_confirmation"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>

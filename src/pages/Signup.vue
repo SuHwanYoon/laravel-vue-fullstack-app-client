@@ -3,6 +3,7 @@
 import { ref } from "vue";
 import GuestLayout from "../components/GuestLayout.vue";
 import axiosClient from "@/axios.js";
+import router from "@/router";
 
 // data는 회원가입 폼의 입력 필드 값을 저장하는 반응형 객체입니다.
 // ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
@@ -14,10 +15,32 @@ const data = ref({
   password_confirmation: "",
 });
 
-function submit() {
-  axiosClient.get("/sanctum/csrf-cookie").then((response) => {
-    axiosClient.post("/register", data.value);
-  });
+// form에서 보내진 field의 에러를 담을 변수
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+const fieldErrors = ref({
+  name: [],
+  email: [],
+  password: [],
+});
+
+// ref를 이용한 문자열 errorMessage
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+// const errorMessage = ref("");
+
+// 회원가입 form의 /register에 PostRequest할 submit함수
+async function submit() {
+  try {
+    await axiosClient.get("/sanctum/csrf-cookie");
+    await axiosClient.post("/register", data.value);
+    router.push({ name: "Home" });
+  } catch (error) {
+    console.log(error.response.data.message);
+    console.log(error.response.data.errors);
+    // errorMessage.value = error.response.data.message;
+    fieldErrors.value = error.response.data.errors;
+  }
 }
 </script>
 
@@ -29,8 +52,16 @@ function submit() {
       Create New Account
     </h2>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form @submit.prevent="submit" class="space-y-4">
+    <!-- Sign up form 위쪽에 에러메세지 출력-->
+    <!-- div 블록에 v-if 디렉티브를 사용 -->
+    <!-- <div
+      v-if="errorMessage"
+      class="mt-4 py-2 px-3 rounded text-white bg-red-400 sm:mx-auto sm:w-full sm:max-w-sm" >
+      {{ errorMessage }}
+    </div> -->
+
+    <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form class="space-y-4" @submit.prevent="submit">
         <!-- 이름 입력필드 -->
         <div>
           <label for="name" class="block text-sm/6 font-medium text-gray-900"
@@ -38,13 +69,23 @@ function submit() {
           >
           <div class="mt-2">
             <input
-              name="name"
               id="name"
-              required
               v-model="data.name"
+              name="name"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
+          <!-- 이름입력필드 아래에 표시될 에러메세지 -->
+          <div
+            v-if="fieldErrors.name"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p v-for="error in fieldErrors.name" :key="error">
+              {{ error }}
+            </p>
+            
+          </div>
+              
         </div>
         <!-- 이메일 입력필드 -->
         <div>
@@ -53,15 +94,23 @@ function submit() {
           >
           <div class="mt-2">
             <input
+              id="email"
+              v-model="data.email"
               type="email"
               name="email"
-              id="email"
               autocomplete="email"
-              required
-              v-model="data.email"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
+          <!-- 이메일입력필드 아래에 표시될 에러메세지 -->
+          <div
+            v-if="fieldErrors.email"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p v-for="error in fieldErrors.email" :key="error">
+              {{ error }}
+            </p>  
+            </div>
         </div>
         <!-- 비밀번호 입력필드-->
         <div>
@@ -74,14 +123,23 @@ function submit() {
           </div>
           <div class="mt-2">
             <input
+              id="password"
+              v-model="data.password"
               type="password"
               name="password"
-              id="password"
-              required
-              v-model="data.password"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>
+          <!-- 비밀번호입력필드 아래에 표시될 에러메세지 -->
+          <div
+            v-if="fieldErrors.password"
+            class="mt-1 text-sm text-red-600"
+          >
+            <p v-for="error in fieldErrors.password" :key="error">
+              {{ error }}
+            </p>
+          </div>
+          <!-- 비밀번호 확인 입력필드 -->
         </div>
         <!-- 비밀번호 확인 입력필드-->
         <div>
@@ -95,11 +153,10 @@ function submit() {
           </div>
           <div class="mt-2">
             <input
+              id="passwordConfirmation"
+              v-model="data.password_confirmation"
               type="password"
               name="password"
-              id="passwordConfirmation"
-              required
-              v-model="data.password_confirmation"
               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             />
           </div>

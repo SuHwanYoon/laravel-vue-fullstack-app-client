@@ -60,9 +60,14 @@
                   <span class="sr-only">Open user menu</span>
                   <img
                     class="size-8 rounded-full outline outline-1 -outline-offset-1 outline-white/10"
-                    :src="user.imageUrl"
+                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                     alt=""
                   />
+                  <!-- span 블록안에 user.name을 가져와서 표시 -->
+                  <span
+                    class="ml-3 block text-sm font-medium text-white"
+                    >{{ user.name }}</span
+                  >
                 </MenuButton>
 
                 <transition
@@ -126,7 +131,7 @@
             <div class="shrink-0">
               <img
                 class="size-10 rounded-full outline outline-1 -outline-offset-1 outline-white/10"
-                :src="user.imageUrl"
+                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                 alt=""
               />
             </div>
@@ -197,7 +202,8 @@ const navigation = [
 //   { name: "Sign out", href: "#" },
 // ];
 
-// 로그아웃 버튼클릭 콘솔 프린트 확인용 함수
+// 로그아웃 버튼클릭시 상태관리 userStore에서 함수호출
+// 실행하고 Login 페이지로 이동
 function logout() {
   userStore.logoutUser().then(() => {
     router.push({ name: "Login" });

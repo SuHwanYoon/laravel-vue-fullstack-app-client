@@ -8,18 +8,32 @@ import GuestLayout from "../components/GuestLayout.vue";
 // data는 로그인 폼의 입력 필드 값을 저장하는 반응형 객체입니다.
 // ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
 // `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+// .value를 하지않고 data상태로 사용하면 Vue에서 경고메세지를 출력함
 const data = ref({
   email: "",
   password: "",
 });
+// ref를 이용한 문자열 errorMessage
+// ref는 Vue 3 Composition API에서 반응형 상태를 선언할 때 사용됩니다.
+// `ref`로 감싸진 변수는 `.value` 속성을 통해 접근하고 수정할 수 있습니다.
+const errorMessage = ref("");
+
 
 // Login form의 /login에 PostRequest할 submit함수
 function submit() {
   // eslint-disable-next-line no-unused-vars
   axiosClient.get("/sanctum/csrf-cookie").then((response) => {
     // axiosInstance의 .then은 Promise를 반환
-    axiosClient.post("/login", data.value).then((response) => {
+    // /login path로 form에 입력된 data.value값을 post request
+    axiosClient.post("/login", data.value)
+    .then((response) => {
       router.push({ name: "Home" });
+    })
+    .catch((error) => {
+      // error은 Axios의 json error임
+      // json구조를 참고해서 해당하는 key를 찾아서 정확히 참조해야함
+      console.log(error);
+      errorMessage.value = error.response.data.message;
     });
   });
 }
@@ -33,7 +47,15 @@ function submit() {
       Sign in to your account
     </h2>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <!-- login 위쪽에 에러메세지 출력-->
+    <!-- div 블록에 v-if 디렉티브를 사용 -->
+    <div
+      v-if="errorMessage"
+      class="mt-4 py-2 px-3 rounded text-white bg-red-400 sm:mx-auto sm:w-full sm:max-w-sm">
+      {{ errorMessage }}
+    </div>
+
+    <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
       <!-- @는 vue에서 v-on의 축약형 @submit는 form의 submit동작을감지하고 가로챔-->
       <!-- v-on은 vue의 디렉티브이고 vue에서 html태그에 기능을 추가하기위한 문법 -->
       <!-- submit가 되지만 페이지의 새로고침은 막기위해서 prevent처리 -->

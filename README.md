@@ -31,15 +31,30 @@ Technologies used for building the backend API and handling authentication:
 | **Laravel Sanctum** | Authentication Package | Used for session-based and token-based authentication |
 | **Composer** | PHP Package Management | Version 2 |
 
-## Screenshot
+---
+
+### Application Screenshot
+#### Signin Page
+| | |
+| :---: | :---: |
+| <img src="screenShot/signin_ui1.png" alt="Signin" width="300"/> | <img src="screenShot/signin_ui2.png" alt="Signin" width="300"/> |
+
+#### Signup Page
+| | |
+| :---: | :---: |
+| <img src="screenShot/signup_ui1.png" alt="Signup" width="300"/> | <img src="screenShot/signup_ui2.png" alt="Signup" width="300"/> |
 
 ### Image Upload
 ![image_upload1](./screenShot/image_upload1.png)
 ![image_upload2](./screenShot/image_upload2.png)
 ![image_upload3](./screenShot/image_upload3.png)
 
+---
+
 ### My Image
 ![myimage1](./screenShot/myimage1.png)
+
+---
 
 ### Interactive Menu
 ![interactive_menu1](./screenShot/interactive_menu1.png)
